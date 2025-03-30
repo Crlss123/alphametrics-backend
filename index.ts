@@ -4,6 +4,12 @@ const PORT = 3000;
 const app = express();
 app.use(morgan("dev"));
 
+app.get("/evaluado/getevaluados", (req: Request, res: Response) => {
+  res.send("Devuelve todos los evaluados");
+});
+
+
+
 app.listen(PORT, () => {
   console.log("El servidor esta corriendo en el puerto 3000");
 });
