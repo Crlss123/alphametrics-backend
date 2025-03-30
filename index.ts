@@ -8,6 +8,11 @@ app.get("/evaluado/getevaluados", (req: Request, res: Response) => {
   res.send("Devuelve todos los evaluados");
 });
 
+app.post("/evaluado/createevaluado", (req: Request, res: Response) => {
+  const id = req.body.id;
+  res.send(`Crea un nuevo evaluado con el id ${id}`);
+});
+
 
 
 app.listen(PORT, () => {
