@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize-typescript";
 import { Person } from "../models/person";
 import { Zone } from "../models/zone";
-import { Institution } from "../models/insitution";
+import { Population } from "../models/population";
 
 const connection = new Sequelize({
   database: "alpha_db",
@@ -10,7 +10,7 @@ const connection = new Sequelize({
   password: "123456",
   host: "localhost",
   port: 3306,
-  models: [Person, Zone, Institution],
+  models: [Person, Zone, Population],
   logging: false,
 });
 
