@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const personRouter = (0, express_1.Router)();
+personRouter.get("/", () => { });
+personRouter.post("/", () => { });
+personRouter.patch("/:id", () => { });
+personRouter.delete("/:id", () => { });
+personRouter.get("/:id", () => { });
+exports.default = personRouter;
