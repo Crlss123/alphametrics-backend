@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Person = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
 const zone_1 = require("./zone");
+const insitution_1 = require("./insitution");
 let Person = class Person extends sequelize_typescript_1.Model {
     first_name;
     second_name;
@@ -22,6 +23,8 @@ let Person = class Person extends sequelize_typescript_1.Model {
     status;
     zone_id;
     zone;
+    institution_id;
+    institution;
 };
 exports.Person = Person;
 __decorate([
@@ -77,6 +80,15 @@ __decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => zone_1.Zone),
     __metadata("design:type", zone_1.Zone)
 ], Person.prototype, "zone", void 0);
+__decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => insitution_1.Institution),
+    sequelize_typescript_1.Column,
+    __metadata("design:type", Number)
+], Person.prototype, "institution_id", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => insitution_1.Institution),
+    __metadata("design:type", insitution_1.Institution)
+], Person.prototype, "institution", void 0);
 exports.Person = Person = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "people",

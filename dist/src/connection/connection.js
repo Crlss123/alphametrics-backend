@@ -3,14 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_typescript_1 = require("sequelize-typescript");
 const person_1 = require("../models/person");
 const zone_1 = require("../models/zone");
+const insitution_1 = require("../models/insitution");
 const connection = new sequelize_typescript_1.Sequelize({
-    database: 'alpha_db',
-    dialect: 'mysql',
-    username: 'root',
-    password: '123456',
-    host: 'localhost',
+    database: "alpha_db",
+    dialect: "mysql",
+    username: "root",
+    password: "C4rl0s2005!",
+    host: "localhost",
     port: 3306,
-    models: [person_1.Person, zone_1.Zone],
+    models: [person_1.Person, zone_1.Zone, insitution_1.Institution],
     logging: false,
 });
 async function connectionDB() {
