@@ -9,15 +9,15 @@ interface PersonAttributes{
   first_lastname: string;
   second_lastname: string;
   curp: string;
-  genero: string;
-  graduado: boolean;
+  gender: string;
+  status: boolean;
 }
 
 interface PersonCreationAttributes extends Optional<PersonAttributes, 'id'>{}
 
 @Table ({
-  tableName: "Evaluados",
-  timestamps: true,
+    tableName: "people",
+    timestamps: true,
 })
 export class Person extends Model<PersonAttributes, PersonCreationAttributes>{
  
@@ -50,13 +50,13 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes>{
    @Column({
     type:DataType.STRING(1),
    })
-   genero!: string;
+   gender!: string;
 
    @Column({
     type:DataType.BOOLEAN,
     defaultValue:false,
    })
-   graduado!:boolean;
+   status!:boolean;
 
    @ForeignKey(() => Zone)
    @Column
