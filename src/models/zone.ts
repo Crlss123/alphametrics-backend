@@ -1,5 +1,6 @@
-import { Table, Model, Column } from "sequelize-typescript";
+import { Table, Model, Column, HasMany } from "sequelize-typescript";
 import { Optional } from "sequelize";
+import { Person } from "./person";
 
 interface ZoneAttributes {
   id: number;
@@ -19,4 +20,8 @@ export class Zone extends Model<ZoneAttributes, ZoneCreationAttributes> {
 
   @Column
   state!: string;
+
+  @HasMany(() => Person)
+  people!: Person[];
+
 }

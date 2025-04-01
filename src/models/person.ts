@@ -1,5 +1,6 @@
-import {Table, Model, Column, DataType, Unique} from 'sequelize-typescript';
+import {Table, Model, Column, DataType, Unique, ForeignKey, BelongsTo} from 'sequelize-typescript';
 import {Optional} from 'sequelize';
+import {Zone} from './zone'
 
 interface PersonAttributes{
   id: number;
@@ -39,7 +40,7 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes>{
     type:DataType.STRING(50),
    })
    second_lastname!: string;
-   
+
    @Unique
    @Column({
     type:DataType.STRING(18),
@@ -56,4 +57,11 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes>{
     defaultValue:false,
    })
    graduado!:boolean;
+
+   @ForeignKey(() => Zone)
+   @Column
+   zone_id!:number;
+
+   @BelongsTo(() => Zone)
+   zone!: Zone;
 }
