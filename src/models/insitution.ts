@@ -2,24 +2,24 @@ import { Table, Model, Column, HasMany } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Person } from "./person";
 
-interface ZoneAttributes {
+interface InstitutionAttributes {
   id: number;
   name: string;
-  state: string;
 }
 
-interface ZoneCreationAttributes extends Optional<ZoneAttributes, "id"> {}
+interface InstitutionCreationAttributes
+  extends Optional<InstitutionAttributes, "id"> {}
 
 @Table({
-  tableName: "zones",
+  tableName: "institutions",
   timestamps: true,
 })
-export class Zone extends Model<ZoneAttributes, ZoneCreationAttributes> {
+export class Institution extends Model<
+  InstitutionAttributes,
+  InstitutionCreationAttributes
+> {
   @Column
   name!: string;
-
-  @Column
-  state!: string;
 
   @HasMany(() => Person)
   people!: Person[];
