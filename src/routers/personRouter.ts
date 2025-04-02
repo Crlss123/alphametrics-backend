@@ -1,14 +1,22 @@
 import { Router } from "express";
+import {
+  getAllPeople,
+  modifyPerson,
+  createPerson,
+  getPersonById,
+  deletePerson,
+} from "../controllers/personController";
+
 const personRouter: Router = Router();
 
-personRouter.get("/",()=>{});
+personRouter.get("/", getAllPeople);
 
-personRouter.post("/",()=>{});
+personRouter.post("/", createPerson);
 
-personRouter.patch("/:id",()=>{});
+personRouter.patch("/:id", modifyPerson);
 
-personRouter.delete("/:id",()=>{});
+personRouter.delete("/:id", deletePerson);
 
-personRouter.get("/:id",()=>{});
+personRouter.get("/:id", getPersonById);
 
 export default personRouter;
