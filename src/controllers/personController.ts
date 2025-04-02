@@ -28,3 +28,15 @@ export const createPerson: RequestHandler = (req:Request, res:Response) => {
         });
     });
 };
+
+export const deletePerson: RequestHandler = async (req: Request, res: Response) => {
+    const {id} = req.body;
+    try{
+        await Person.destroy({ where: {id}});
+        res.status(200).json({message: "Provided deleted"});
+    } catch (error){
+        res.status(500).json({
+            message: "Error deleting products."
+        });
+    }
+};
