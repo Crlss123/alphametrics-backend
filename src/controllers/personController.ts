@@ -3,30 +3,31 @@ import { Person } from "../models/person";
 import { Population } from "../models/population";
 import { Zone } from "../models/zone";
 
-export const createPerson: RequestHandler = (req:Request, res:Response) => {
-    if(!req.body){
-        res.status(400).json({
-            status: "error",
-            message:"Content can not be empty",
-            payload: null,
-        });
-    }
+export const createPerson: RequestHandler = (req: Request, res: Response) => {
+  if (!req.body) {
+    res.status(400).json({
+      status: "error",
+      message: "Content can not be empty",
+      payload: null,
+    });
+  }
 
-    const person = { ...req.body};
-    Person.create(person)
-    .then((data:Person | null)=> {
-        res.status(200).json({
-            status: "success",
-            message: "Product successfully created",
-            payload: data,
-        });
+  const person = { ...req.body };
+  Person.create(person)
+    .then((data: Person | null) => {
+      res.status(200).json({
+        status: "success",
+        message: "Persona creada correctamente",
+        payload: data,
+      });
     })
-    .catch((err)=>{
-        res.status(500).json({
-            status: "error",
-            message: "Something happened creating a product" + err.message,
-            payload: null,
-        });
+    .catch((err) => {
+      console.error("Validation Error:", err);
+      res.status(500).json({
+        status: "error",
+        message: "Algo salió mal al intentar crear una persona " + err.message,
+        payload: null,
+      });
     });
 };
 
@@ -93,4 +94,3 @@ export const modifyPerson: RequestHandler = (req: Request, res: Response) => {
       });
     });
 };
-

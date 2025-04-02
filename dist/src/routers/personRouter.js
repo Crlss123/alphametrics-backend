@@ -4,7 +4,7 @@ const express_1 = require("express");
 const personController_1 = require("../controllers/personController");
 const personRouter = (0, express_1.Router)();
 personRouter.get("/", personController_1.getAllPeople);
-personRouter.post("/", () => { });
+personRouter.post("/", personController_1.createPerson);
 personRouter.patch("/:id", personController_1.modifyPerson);
 personRouter.delete("/:id", () => { });
 personRouter.get("/:id", () => { });
