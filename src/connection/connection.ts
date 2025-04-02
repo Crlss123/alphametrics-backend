@@ -7,7 +7,7 @@ const connection = new Sequelize({
   database: "alpha_db",
   dialect: "mysql",
   username: "root",
-  password: "123456",
+  password: "C4rl0s2005!",
   host: "localhost",
   port: 3306,
   models: [Person, Zone, Institution],
