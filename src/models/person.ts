@@ -8,8 +8,7 @@ import {
   BelongsTo,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
-import { Zone } from "./zone";
-import { Institution } from "./insitution";
+import { Population } from "./population";
 
 interface PersonAttributes {
   id: number;
@@ -66,17 +65,10 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
   })
   status!: boolean;
 
-  @ForeignKey(() => Zone)
+  @ForeignKey(() => Population)
   @Column
-  zone_id!: number;
+  population_id!: number;
 
-  @BelongsTo(() => Zone)
-  zone!: Zone;
-
-  @ForeignKey(() => Institution)
-  @Column
-  institution_id!: number;
-
-  @BelongsTo(() => Institution)
-  institution!: Institution;
+  @BelongsTo(() => Population)
+  population!: Population;
 }

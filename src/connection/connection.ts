@@ -1,16 +1,16 @@
 import { Sequelize } from "sequelize-typescript";
 import { Person } from "../models/person";
 import { Zone } from "../models/zone";
-import { Institution } from "../models/insitution";
+import { Population } from "../models/population";
 
 const connection = new Sequelize({
   database: "alpha_db",
   dialect: "mysql",
   username: "root",
-  password: "123456",
+  password: "C4rl0s2005!", //C4rl0s2005!
   host: "localhost",
   port: 3306,
-  models: [Person, Zone, Institution],
+  models: [Person, Zone, Population],
   logging: false,
 });
 
