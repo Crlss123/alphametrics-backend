@@ -1,7 +1,8 @@
 import { Router } from "express";
+import { getAllPeople } from "../controllers/personController";
 const personRouter: Router = Router();
 
-personRouter.get("/",()=>{});
+  personRouter.get("/",getAllPeople);
 
 personRouter.post("/",()=>{});
 

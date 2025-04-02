@@ -11,8 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Person = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
-const zone_1 = require("./zone");
-const insitution_1 = require("./insitution");
+const population_1 = require("./population");
 let Person = class Person extends sequelize_typescript_1.Model {
     first_name;
     second_name;
@@ -21,10 +20,8 @@ let Person = class Person extends sequelize_typescript_1.Model {
     curp;
     gender;
     status;
-    zone_id;
-    zone;
-    institution_id;
-    institution;
+    population_id;
+    population;
 };
 exports.Person = Person;
 __decorate([
@@ -72,23 +69,14 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Person.prototype, "status", void 0);
 __decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => zone_1.Zone),
+    (0, sequelize_typescript_1.ForeignKey)(() => population_1.Population),
     sequelize_typescript_1.Column,
     __metadata("design:type", Number)
-], Person.prototype, "zone_id", void 0);
+], Person.prototype, "population_id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => zone_1.Zone),
-    __metadata("design:type", zone_1.Zone)
-], Person.prototype, "zone", void 0);
-__decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => insitution_1.Institution),
-    sequelize_typescript_1.Column,
-    __metadata("design:type", Number)
-], Person.prototype, "institution_id", void 0);
-__decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => insitution_1.Institution),
-    __metadata("design:type", insitution_1.Institution)
-], Person.prototype, "institution", void 0);
+    (0, sequelize_typescript_1.BelongsTo)(() => population_1.Population),
+    __metadata("design:type", population_1.Population)
+], Person.prototype, "population", void 0);
 exports.Person = Person = __decorate([
     (0, sequelize_typescript_1.Table)({
         tableName: "people",

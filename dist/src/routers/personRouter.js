@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const personController_1 = require("../controllers/personController");
 const personRouter = (0, express_1.Router)();
-personRouter.get("/", () => { });
+personRouter.get("/", personController_1.getAllPeople);
 personRouter.post("/", () => { });
 personRouter.patch("/:id", () => { });
 personRouter.delete("/:id", () => { });

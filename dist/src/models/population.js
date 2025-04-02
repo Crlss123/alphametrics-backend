@@ -9,30 +9,37 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Zone = void 0;
+exports.Population = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
-const population_1 = require("./population");
-let Zone = class Zone extends sequelize_typescript_1.Model {
-    name;
-    state;
-    populations;
+const person_1 = require("./person");
+const zone_1 = require("./zone");
+let Population = class Population extends sequelize_typescript_1.Model {
+    age;
+    zone_id;
+    zone;
+    people;
 };
-exports.Zone = Zone;
+exports.Population = Population;
 __decorate([
     sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], Zone.prototype, "name", void 0);
+    __metadata("design:type", Number)
+], Population.prototype, "age", void 0);
 __decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => zone_1.Zone),
     sequelize_typescript_1.Column,
-    __metadata("design:type", String)
-], Zone.prototype, "state", void 0);
+    __metadata("design:type", Number)
+], Population.prototype, "zone_id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.HasMany)(() => population_1.Population),
+    (0, sequelize_typescript_1.BelongsTo)(() => zone_1.Zone),
+    __metadata("design:type", zone_1.Zone)
+], Population.prototype, "zone", void 0);
+__decorate([
+    (0, sequelize_typescript_1.HasMany)(() => person_1.Person),
     __metadata("design:type", Array)
-], Zone.prototype, "populations", void 0);
-exports.Zone = Zone = __decorate([
+], Population.prototype, "people", void 0);
+exports.Population = Population = __decorate([
     (0, sequelize_typescript_1.Table)({
-        tableName: "zones",
+        tableName: "populations",
         timestamps: true,
     })
-], Zone);
+], Population);
