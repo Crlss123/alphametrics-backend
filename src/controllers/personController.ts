@@ -3,6 +3,34 @@ import { Person } from "../models/person";
 import { Population } from "../models/population";
 import { Zone } from "../models/zone";
 
+export const createPerson: RequestHandler = (req: Request, res: Response) => {
+  if (!req.body) {
+    res.status(400).json({
+      status: "error",
+      message: "Content can not be empty",
+      payload: null,
+    });
+  }
+
+  const person = { ...req.body };
+  Person.create(person)
+    .then((data: Person | null) => {
+      res.status(200).json({
+        status: "success",
+        message: "Persona creada correctamente",
+        payload: data,
+      });
+    })
+    .catch((err) => {
+      console.error("Validation Error:", err);
+      res.status(500).json({
+        status: "error",
+        message: "Algo salió mal al intentar crear una persona " + err.message,
+        payload: null,
+      });
+    });
+};
+
 export const getAllPeople: RequestHandler = (req: Request, res: Response) => {
   Person.findAll({
     include: [
@@ -28,6 +56,41 @@ export const getAllPeople: RequestHandler = (req: Request, res: Response) => {
         message: "Error al obtener las personas",
         payload: null,
         status: "error",
+      });
+    });
+};
+
+export const modifyPerson: RequestHandler = (req: Request, res: Response) => {
+  if (!req.body) {
+    res.status(400).json({
+      message: "No se proporcionaron datos para modificar la persona",
+      payload: null,
+      status: "error",
+    });
+    return;
+  }
+  Person.update({ ...req.body }, { where: { id: req.params.id } })
+    .then((isUpdated) => {
+      if (isUpdated[0] > 0) {
+        res.status(200).json({
+          status: "success",
+          message: "Persona modificada correctamente",
+          payload: { ...req.body },
+        });
+      } else {
+        res.status(500).json({
+          status: "error",
+          message: "Error al modificar la persona",
+          payload: null,
+        });
+      }
+    })
+    .catch((error: Error) => {
+      res.status(500).json({
+        status: "error",
+        message:
+          "Algo salió mal al intentar modificar la persona " + error.message,
+        payload: null,
       });
     });
 };

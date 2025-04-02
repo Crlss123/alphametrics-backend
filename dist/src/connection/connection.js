@@ -8,7 +8,7 @@ const connection = new sequelize_typescript_1.Sequelize({
     database: "alpha_db",
     dialect: "mysql",
     username: "root",
-    password: "123456", //C4rl0s2005!
+    password: "C4rl0s2005!", //C4rl0s2005!
     host: "localhost",
     port: 3306,
     models: [person_1.Person, zone_1.Zone, population_1.Population],
