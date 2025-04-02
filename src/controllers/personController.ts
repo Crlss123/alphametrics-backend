@@ -94,3 +94,34 @@ export const modifyPerson: RequestHandler = (req: Request, res: Response) => {
       });
     });
 };
+
+export const getPersonById: RequestHandler = (req: Request, res: Response) => {
+  Person.findByPk(req.params.id, {
+    include: [
+      {
+        model: Population,
+        include: [
+          {
+            model: Zone,
+          },
+        ],
+      },
+    ],
+  })
+    .then((data: Person | null) => {
+      if (data) {
+        res.status(200).json({
+          status: "success",
+          message: "Persona obtenida correctamente",
+          payload: data,
+        });
+      }
+    })
+    .catch((error: Error) => {
+      res.status(500).json({
+        status: "error",
+        message: "Error al obtener la persona " + error.message,
+        payload: null,
+      });
+    });
+};

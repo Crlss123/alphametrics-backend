@@ -7,5 +7,5 @@ personRouter.get("/", personController_1.getAllPeople);
 personRouter.post("/", personController_1.createPerson);
 personRouter.patch("/:id", personController_1.modifyPerson);
 personRouter.delete("/:id", () => { });
-personRouter.get("/:id", () => { });
+personRouter.get("/:id", personController_1.getPersonById);
 exports.default = personRouter;
