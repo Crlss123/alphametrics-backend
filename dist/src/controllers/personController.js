@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.modifyPerson = exports.getAllPeople = exports.createPerson = void 0;
+exports.getPersonById = exports.modifyPerson = exports.getAllPeople = exports.createPerson = void 0;
 const person_1 = require("../models/person");
 const population_1 = require("../models/population");
 const zone_1 = require("../models/zone");
@@ -95,3 +95,34 @@ const modifyPerson = (req, res) => {
     });
 };
 exports.modifyPerson = modifyPerson;
+const getPersonById = (req, res) => {
+    person_1.Person.findByPk(req.params.id, {
+        include: [
+            {
+                model: population_1.Population,
+                include: [
+                    {
+                        model: zone_1.Zone,
+                    },
+                ],
+            },
+        ],
+    })
+        .then((data) => {
+        if (data) {
+            res.status(200).json({
+                status: "success",
+                message: "Persona obtenida correctamente",
+                payload: data,
+            });
+        }
+    })
+        .catch((error) => {
+        res.status(500).json({
+            status: "error",
+            message: "Error al obtener la persona " + error.message,
+            payload: null,
+        });
+    });
+};
+exports.getPersonById = getPersonById;
