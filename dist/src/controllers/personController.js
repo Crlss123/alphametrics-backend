@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPersonById = exports.modifyPerson = exports.getAllPeople = exports.createPerson = void 0;
+exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
 const person_1 = require("../models/person");
 const population_1 = require("../models/population");
 const zone_1 = require("../models/zone");
@@ -45,14 +45,14 @@ const getAllPeople = (req, res) => {
         ],
     })
         .then((data) => {
-        return res.status(200).json({
+        res.status(200).json({
             message: "Personas obtenidas correctamente",
             payload: data,
             status: "success",
         });
     })
         .catch((error) => {
-        return res.status(500).json({
+        res.status(500).json({
             message: "Error al obtener las personas",
             payload: null,
             status: "error",
@@ -60,6 +60,24 @@ const getAllPeople = (req, res) => {
     });
 };
 exports.getAllPeople = getAllPeople;
+const getTotalPeople = async (req, res) => {
+    try {
+        const totalPersonas = await person_1.Person.count();
+        res.status(200).json({
+            message: "Total de personas obtenido exitosamente",
+            payload: { total: totalPersonas },
+            status: "success",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error al obtener el total",
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.getTotalPeople = getTotalPeople;
 const modifyPerson = (req, res) => {
     if (!req.body) {
         res.status(400).json({
@@ -126,3 +144,16 @@ const getPersonById = (req, res) => {
     });
 };
 exports.getPersonById = getPersonById;
+const deletePerson = async (req, res) => {
+    const { id } = req.params;
+    try {
+        await person_1.Person.destroy({ where: { id } });
+        res.status(200).json({ message: "Provided deleted" });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error deleting products.",
+        });
+    }
+};
+exports.deletePerson = deletePerson;

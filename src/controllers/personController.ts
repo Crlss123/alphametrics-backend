@@ -45,19 +45,39 @@ export const getAllPeople: RequestHandler = (req: Request, res: Response) => {
     ],
   })
     .then((data: Person[]) => {
-      return res.status(200).json({
+      res.status(200).json({
         message: "Personas obtenidas correctamente",
         payload: data,
         status: "success",
       });
     })
     .catch((error: Error) => {
-      return res.status(500).json({
+      res.status(500).json({
         message: "Error al obtener las personas",
         payload: null,
         status: "error",
       });
     });
+};
+
+export const getTotalPeople: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const totalPersonas = await Person.count();
+    res.status(200).json({
+      message: "Total de personas obtenido exitosamente",
+      payload: { total: totalPersonas },
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener el total",
+      payload: null,
+      status: "error",
+    });
+  }
 };
 
 export const modifyPerson: RequestHandler = (req: Request, res: Response) => {
