@@ -6,6 +6,7 @@ import {
   Unique,
   ForeignKey,
   BelongsTo,
+  AllowNull,
 } from "sequelize-typescript";
 import { Optional } from "sequelize";
 import { Population } from "./population";
@@ -48,7 +49,8 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
   })
   second_lastname!: string;
 
-  @Unique
+  @Unique({ name: "curp_unique", msg: "curp_should_be_unique" })
+  @AllowNull(false)
   @Column({
     type: DataType.STRING(18),
   })
@@ -66,9 +68,14 @@ export class Person extends Model<PersonAttributes, PersonCreationAttributes> {
   status!: boolean;
 
   @ForeignKey(() => Population)
-  @Column
+  @Column({
+    type: DataType.INTEGER,
+  })
   population_id!: number;
 
-  @BelongsTo(() => Population)
+  @BelongsTo(() => Population, {
+    foreignKey: "population_id",
+    constraints: false,
+  })
   population!: Population;
 }

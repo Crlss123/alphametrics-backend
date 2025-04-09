@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
+exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
 const person_1 = require("../models/person");
 const population_1 = require("../models/population");
 const zone_1 = require("../models/zone");
@@ -73,11 +73,34 @@ const getTotalPeople = async (req, res) => {
         res.status(500).json({
             message: "Error al obtener el total",
             payload: null,
-            status: "error",
+            status: "error " + error,
         });
     }
 };
 exports.getTotalPeople = getTotalPeople;
+const getStatusPercentage = async (req, res) => {
+    try {
+        const total = await person_1.Person.count();
+        const graduates = await person_1.Person.count({ where: { status: true } });
+        const failed = total - graduates;
+        res.status(200).json({
+            message: "Informacion obtenida correctamente",
+            payload: [
+                { name: "Graduados", value: graduates },
+                { name: "No Graduado", value: failed },
+            ],
+            status: "success",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error al obtener la informacion",
+            payload: null,
+            status: "error " + error,
+        });
+    }
+};
+exports.getStatusPercentage = getStatusPercentage;
 const modifyPerson = (req, res) => {
     if (!req.body) {
         res.status(400).json({

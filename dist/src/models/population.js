@@ -30,7 +30,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Population.prototype, "zone_id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => zone_1.Zone),
+    (0, sequelize_typescript_1.BelongsTo)(() => zone_1.Zone, {
+        foreignKey: "zone_id",
+        constraints: false,
+    }),
     __metadata("design:type", zone_1.Zone)
 ], Population.prototype, "zone", void 0);
 __decorate([

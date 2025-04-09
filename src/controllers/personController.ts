@@ -75,7 +75,32 @@ export const getTotalPeople: RequestHandler = async (
     res.status(500).json({
       message: "Error al obtener el total",
       payload: null,
-      status: "error",
+      status: "error " + error,
+    });
+  }
+};
+
+export const getStatusPercentage: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const total = await Person.count();
+    const graduates = await Person.count({ where: { status: true } });
+    const failed = total - graduates;
+    res.status(200).json({
+      message: "Informacion obtenida correctamente",
+      payload: [
+        { name: "Graduados", value: graduates },
+        { name: "No Graduado", value: failed },
+      ],
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener la informacion",
+      payload: null,
+      status: "error " + error,
     });
   }
 };
