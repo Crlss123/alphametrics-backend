@@ -8,6 +8,7 @@ import {
   getTotalPeople,
   getStatusPercentage,
   getGenderStats,
+  getPeopleByGroup
 } from "../controllers/personController";
 
 const personRouter: Router = Router();
@@ -19,6 +20,8 @@ personRouter.get("/gettotal", getTotalPeople);
 personRouter.get("/getstatuspercentage", getStatusPercentage);
 
 personRouter.get("/getgenderstats", getGenderStats);
+
+personRouter.get("/getpeoplebygroup", getPeopleByGroup)
 
 personRouter.post("/", createPerson);
 

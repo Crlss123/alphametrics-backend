@@ -143,6 +143,38 @@ export const getGenderStats: RequestHandler = async (
   }
 };
 
+export const getPeopleByGroup: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { populationId } = req.query;
+
+  if (!populationId) {
+    res.status(404).json({
+      message: "No se encontro el ID de poblacion",
+      payload: null,
+      status: "error",
+    });
+  }
+
+  try {
+    const people = await Person.findAll({
+      where: { population_id: Number(populationId) },
+    });
+    res.status(200).json({
+      message: "Datos obtenidos correctamente",
+      payload: people,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener los datos " + error,
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
 export const modifyPerson: RequestHandler = (req: Request, res: Response) => {
   if (!req.body) {
     res.status(400).json({

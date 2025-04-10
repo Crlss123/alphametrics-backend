@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getGenderStats = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
+exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getPeopleByGroup = exports.getGenderStats = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
 const person_1 = require("../models/person");
 const population_1 = require("../models/population");
 const zone_1 = require("../models/zone");
@@ -134,6 +134,34 @@ const getGenderStats = async (req, res) => {
     }
 };
 exports.getGenderStats = getGenderStats;
+const getPeopleByGroup = async (req, res) => {
+    const { populationId } = req.query;
+    if (!populationId) {
+        res.status(404).json({
+            message: "No se encontro el ID de poblacion",
+            payload: null,
+            status: "error",
+        });
+    }
+    try {
+        const people = await person_1.Person.findAll({
+            where: { population_id: Number(populationId) },
+        });
+        res.status(200).json({
+            message: "Datos obtenidos correctamente",
+            payload: people,
+            status: "success",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error al obtener los datos " + error,
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.getPeopleByGroup = getPeopleByGroup;
 const modifyPerson = (req, res) => {
     if (!req.body) {
         res.status(400).json({

@@ -20,6 +20,7 @@ interface PersonAttributes {
   curp: string;
   gender: string;
   status: boolean;
+  population_id: number;
 }
 
 interface PersonCreationAttributes extends Optional<PersonAttributes, "id"> {}
