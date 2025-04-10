@@ -7,6 +7,7 @@ import {
   deletePerson,
   getTotalPeople,
   getStatusPercentage,
+  getGenderStats,
 } from "../controllers/personController";
 
 const personRouter: Router = Router();
@@ -16,6 +17,8 @@ personRouter.get("/", getAllPeople);
 personRouter.get("/gettotal", getTotalPeople);
 
 personRouter.get("/getstatuspercentage", getStatusPercentage);
+
+personRouter.get("/getgenderstats", getGenderStats);
 
 personRouter.post("/", createPerson);
 

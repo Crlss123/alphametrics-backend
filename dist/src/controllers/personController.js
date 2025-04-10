@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
+exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getGenderStats = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
 const person_1 = require("../models/person");
 const population_1 = require("../models/population");
 const zone_1 = require("../models/zone");
@@ -101,6 +101,39 @@ const getStatusPercentage = async (req, res) => {
     }
 };
 exports.getStatusPercentage = getStatusPercentage;
+const getGenderStats = async (req, res) => {
+    try {
+        const maleGraduates = await person_1.Person.count({
+            where: {
+                gender: "M",
+                status: true,
+            },
+        });
+        const femaleGraduates = await person_1.Person.count({
+            where: {
+                gender: "F",
+                status: true,
+            },
+        });
+        const response = {
+            hombresGraduados: maleGraduates,
+            mujeresGraduadas: femaleGraduates,
+        };
+        res.status(200).json({
+            message: "Datos obtenidos exitosamente",
+            payload: response,
+            status: "success",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error al obtener los datos " + error,
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.getGenderStats = getGenderStats;
 const modifyPerson = (req, res) => {
     if (!req.body) {
         res.status(400).json({

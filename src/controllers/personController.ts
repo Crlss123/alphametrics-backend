@@ -2,6 +2,7 @@ import { Request, Response, RequestHandler } from "express";
 import { Person } from "../models/person";
 import { Population } from "../models/population";
 import { Zone } from "../models/zone";
+import { json } from "sequelize";
 
 export const createPerson: RequestHandler = (req: Request, res: Response) => {
   if (!req.body) {
@@ -101,6 +102,43 @@ export const getStatusPercentage: RequestHandler = async (
       message: "Error al obtener la informacion",
       payload: null,
       status: "error " + error,
+    });
+  }
+};
+
+export const getGenderStats: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const maleGraduates = await Person.count({
+      where: {
+        gender: "M",
+        status: true,
+      },
+    });
+    const femaleGraduates = await Person.count({
+      where: {
+        gender: "F",
+        status: true,
+      },
+    });
+
+    const response = {
+      hombresGraduados: maleGraduates,
+      mujeresGraduadas: femaleGraduates,
+    };
+
+    res.status(200).json({
+      message: "Datos obtenidos exitosamente",
+      payload: response,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener los datos " + error,
+      payload: null,
+      status: "error",
     });
   }
 };
