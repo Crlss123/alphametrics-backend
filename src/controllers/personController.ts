@@ -175,6 +175,40 @@ export const getPeopleByGroup: RequestHandler = async (
   }
 };
 
+export const getAlertLevel: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const total = await Person.count();
+    const graduates = await Person.count({ where: { status: true } });
+    const gradPercentage = (graduates * 100) / total;
+    let level = "";
+
+    if (gradPercentage <= 20) {
+      level = "Grave";
+    } else if (gradPercentage <= 50) {
+      level = "Alto";
+    } else if (gradPercentage <= 90) {
+      level = "Bajo";
+    } else {
+      level = "Nulo";
+    }
+
+    res.status(200).json({
+      message: "Datos obtenidos correctamente",
+      payload: level,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "No se encontro el ID de poblacion",
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
 export const modifyPerson: RequestHandler = (req: Request, res: Response) => {
   if (!req.body) {
     res.status(400).json({

@@ -8,6 +8,7 @@ personRouter.get("/gettotal", personController_1.getTotalPeople);
 personRouter.get("/getstatuspercentage", personController_1.getStatusPercentage);
 personRouter.get("/getgenderstats", personController_1.getGenderStats);
 personRouter.get("/getpeoplebygroup", personController_1.getPeopleByGroup);
+personRouter.get("/getalertlevel", personController_1.getAlertLevel);
 personRouter.post("/", personController_1.createPerson);
 personRouter.patch("/:id", personController_1.modifyPerson);
 personRouter.delete("/:id", personController_1.deletePerson);

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getPeopleByGroup = exports.getGenderStats = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
+exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getAlertLevel = exports.getPeopleByGroup = exports.getGenderStats = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
 const person_1 = require("../models/person");
 const population_1 = require("../models/population");
 const zone_1 = require("../models/zone");
@@ -162,6 +162,39 @@ const getPeopleByGroup = async (req, res) => {
     }
 };
 exports.getPeopleByGroup = getPeopleByGroup;
+const getAlertLevel = async (req, res) => {
+    try {
+        const total = await person_1.Person.count();
+        const graduates = await person_1.Person.count({ where: { status: true } });
+        const gradPercentage = (graduates * 100) / total;
+        let level = "";
+        if (gradPercentage <= 20) {
+            level = "Grave";
+        }
+        else if (gradPercentage <= 50) {
+            level = "Alto";
+        }
+        else if (gradPercentage <= 90) {
+            level = "Bajo";
+        }
+        else {
+            level = "Nulo";
+        }
+        res.status(200).json({
+            message: "Datos obtenidos correctamente",
+            payload: level,
+            status: "success",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "No se encontro el ID de poblacion",
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.getAlertLevel = getAlertLevel;
 const modifyPerson = (req, res) => {
     if (!req.body) {
         res.status(400).json({
