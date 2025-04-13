@@ -158,7 +158,7 @@ export const getPeopleByGroup: RequestHandler = async (
   }
 
   try {
-    const people = await Person.findAll({
+    const people: Person[] = await Person.findAll({
       where: { population_id: Number(populationId) },
     });
     res.status(200).json({
@@ -203,6 +203,64 @@ export const getAlertLevel: RequestHandler = async (
   } catch (error) {
     res.status(500).json({
       message: "No se encontro el ID de poblacion",
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
+export const getAllZones: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const zones = await Zone.findAll({
+      include: [
+        {
+          model: Population,
+        },
+      ],
+    });
+    res.status(200).json({
+      message: "Zonas obtenidas de manera correcta",
+      payload: zones,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Algo salio mal al intentar obtener las zonas",
+      payload: null,
+      status: "error " + error,
+    });
+  }
+};
+
+export const getPopulations: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { zoneId } = req.query;
+
+  if (!zoneId) {
+    res.status(404).json({
+      message: "No se encontró el ID de la zona",
+      payload: null,
+      status: "error",
+    });
+  }
+
+  try {
+    const populations: Population[] = await Population.findAll({
+      where: { zone_id: Number(zoneId) },
+    });
+    res.status(200).json({
+      message: "Poblaciones obtenidas correctamente",
+      payload: populations,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener los datos",
       payload: null,
       status: "error",
     });

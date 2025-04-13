@@ -10,6 +10,8 @@ import {
   getGenderStats,
   getPeopleByGroup,
   getAlertLevel,
+  getAllZones,
+  getPopulations,
 } from "../controllers/personController";
 
 const personRouter: Router = Router();
@@ -25,6 +27,10 @@ personRouter.get("/getgenderstats", getGenderStats);
 personRouter.get("/getpeoplebygroup", getPeopleByGroup);
 
 personRouter.get("/getalertlevel", getAlertLevel);
+
+personRouter.get("/getallzones", getAllZones);
+
+personRouter.get("/getpopulations", getPopulations);
 
 personRouter.post("/", createPerson);
 

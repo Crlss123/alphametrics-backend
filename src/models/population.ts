@@ -13,6 +13,7 @@ import { Zone } from "./zone";
 interface PopulationAttributes {
   id: number;
   age: number;
+  zone_id: number;
 }
 
 interface PopulationCreationAttributes

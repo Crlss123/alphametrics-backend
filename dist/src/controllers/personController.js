@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getAlertLevel = exports.getPeopleByGroup = exports.getGenderStats = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
+exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getPopulations = exports.getAllZones = exports.getAlertLevel = exports.getPeopleByGroup = exports.getGenderStats = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
 const person_1 = require("../models/person");
 const population_1 = require("../models/population");
 const zone_1 = require("../models/zone");
@@ -195,6 +195,58 @@ const getAlertLevel = async (req, res) => {
     }
 };
 exports.getAlertLevel = getAlertLevel;
+const getAllZones = async (req, res) => {
+    try {
+        const zones = await zone_1.Zone.findAll({
+            include: [
+                {
+                    model: population_1.Population,
+                },
+            ],
+        });
+        res.status(200).json({
+            message: "Zonas obtenidas de manera correcta",
+            payload: zones,
+            status: "success",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Algo salio mal al intentar obtener las zonas",
+            payload: null,
+            status: "error " + error,
+        });
+    }
+};
+exports.getAllZones = getAllZones;
+const getPopulations = async (req, res) => {
+    const { zoneId } = req.query;
+    if (!zoneId) {
+        res.status(404).json({
+            message: "No se encontró el ID de la zona",
+            payload: null,
+            status: "error",
+        });
+    }
+    try {
+        const populations = await population_1.Population.findAll({
+            where: { zone_id: Number(zoneId) },
+        });
+        res.status(200).json({
+            message: "Poblaciones obtenidas correctamente",
+            payload: populations,
+            status: "success",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error al obtener los datos",
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.getPopulations = getPopulations;
 const modifyPerson = (req, res) => {
     if (!req.body) {
         res.status(400).json({
