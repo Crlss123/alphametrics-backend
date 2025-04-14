@@ -2,6 +2,7 @@ import { Request, Response, RequestHandler } from "express";
 import { Person } from "../models/person";
 import { Population } from "../models/population";
 import { Zone } from "../models/zone";
+import { json } from "sequelize";
 
 export const createPerson: RequestHandler = (req: Request, res: Response) => {
   if (!req.body) {
@@ -45,19 +46,264 @@ export const getAllPeople: RequestHandler = (req: Request, res: Response) => {
     ],
   })
     .then((data: Person[]) => {
-      return res.status(200).json({
+      res.status(200).json({
         message: "Personas obtenidas correctamente",
         payload: data,
         status: "success",
       });
     })
     .catch((error: Error) => {
-      return res.status(500).json({
+      res.status(500).json({
         message: "Error al obtener las personas",
         payload: null,
         status: "error",
       });
     });
+};
+
+export const getTotalPeople: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { populationId } = req.query;
+    const totalPersonas = await Person.count({
+      where: { population_id: Number(populationId) },
+    });
+    res.status(200).json({
+      message: "Total de personas obtenido exitosamente",
+      payload: totalPersonas,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener el total",
+      payload: null,
+      status: "error " + error,
+    });
+  }
+};
+
+export const getStatusPercentage: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { populationId } = req.query;
+    const total = await Person.count({
+      where: { population_id: Number(populationId) },
+    });
+    const graduates = await Person.count({
+      where: { status: true, population_id: Number(populationId) },
+    });
+    const failed = total - graduates;
+    res.status(200).json({
+      message: "Informacion obtenida correctamente",
+      payload: [{ name: "-", graduados: graduates, noGraduados: failed }],
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener la informacion",
+      payload: null,
+      status: "error " + error,
+    });
+  }
+};
+
+export const getGenderStats: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { populationId } = req.query;
+    const maleGraduates = await Person.count({
+      where: {
+        gender: "M",
+        status: true,
+        population_id: Number(populationId),
+      },
+    });
+    const femaleGraduates = await Person.count({
+      where: {
+        gender: "F",
+        status: true,
+        population_id: Number(populationId),
+      },
+    });
+
+    const response = [
+      { name: "Mujeres", value: femaleGraduates },
+      { name: "Hombres", value: maleGraduates },
+    ];
+
+    res.status(200).json({
+      message: "Datos obtenidos exitosamente",
+      payload: response,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener los datos " + error,
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
+export const getPeopleByGroup: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { populationId } = req.query;
+
+  if (!populationId) {
+    res.status(404).json({
+      message: "No se encontro el ID de poblacion",
+      payload: null,
+      status: "error",
+    });
+  }
+
+  try {
+    const people: Person[] = await Person.findAll({
+      where: { population_id: Number(populationId) },
+    });
+    res.status(200).json({
+      message: "Datos obtenidos correctamente",
+      payload: people,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener los datos " + error,
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
+export const getAlertLevel: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { populationId } = req.query;
+    const totalPersonas = await Person.count({
+      where: { population_id: Number(populationId) },
+    });
+    const graduates = await Person.count({
+      where: { status: true, population_id: Number(populationId) },
+    });
+    const gradPercentage = (graduates * 100) / totalPersonas;
+    let level = "";
+
+    if (gradPercentage <= 20) {
+      level = "Grave";
+    } else if (gradPercentage <= 50) {
+      level = "Alto";
+    } else if (gradPercentage <= 90) {
+      level = "Bajo";
+    } else {
+      level = "Nulo";
+    }
+
+    res.status(200).json({
+      message: "Datos obtenidos correctamente",
+      payload: level,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "No se encontro el ID de poblacion",
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
+export const getAllZones: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const zones = await Zone.findAll({
+      include: [
+        {
+          model: Population,
+        },
+      ],
+    });
+    res.status(200).json({
+      message: "Zonas obtenidas de manera correcta",
+      payload: zones,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Algo salio mal al intentar obtener las zonas",
+      payload: null,
+      status: "error " + error,
+    });
+  }
+};
+
+export const getPopulations: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { zoneId } = req.query;
+
+  if (!zoneId) {
+    res.status(404).json({
+      message: "No se encontró el ID de la zona",
+      payload: null,
+      status: "error",
+    });
+  }
+
+  try {
+    const populations: Population[] = await Population.findAll({
+      where: { zone_id: Number(zoneId) },
+    });
+    res.status(200).json({
+      message: "Poblaciones obtenidas correctamente",
+      payload: populations,
+      status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener los datos",
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
+export const getAllPopulations: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const populations = await Population.findAll({
+      include: [
+        {
+          model: Zone,
+        },
+      ],
+    });
+    res.status(200).json({
+      message: "Poblaciones obtenidas correctamente",
+      payload: populations,
+      status: "succes",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener los datos",
+      payload: null,
+      status: "error",
+    });
+  }
 };
 
 export const modifyPerson: RequestHandler = (req: Request, res: Response) => {

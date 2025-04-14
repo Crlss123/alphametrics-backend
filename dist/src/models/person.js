@@ -49,7 +49,8 @@ __decorate([
     __metadata("design:type", String)
 ], Person.prototype, "second_lastname", void 0);
 __decorate([
-    sequelize_typescript_1.Unique,
+    (0, sequelize_typescript_1.Unique)({ name: "curp_unique", msg: "curp_should_be_unique" }),
+    (0, sequelize_typescript_1.AllowNull)(false),
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING(18),
     }),
@@ -70,11 +71,16 @@ __decorate([
 ], Person.prototype, "status", void 0);
 __decorate([
     (0, sequelize_typescript_1.ForeignKey)(() => population_1.Population),
-    sequelize_typescript_1.Column,
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+    }),
     __metadata("design:type", Number)
 ], Person.prototype, "population_id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.BelongsTo)(() => population_1.Population),
+    (0, sequelize_typescript_1.BelongsTo)(() => population_1.Population, {
+        foreignKey: "population_id",
+        constraints: false,
+    }),
     __metadata("design:type", population_1.Population)
 ], Person.prototype, "population", void 0);
 exports.Person = Person = __decorate([
