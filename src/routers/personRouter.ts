@@ -12,6 +12,7 @@ import {
   getAlertLevel,
   getAllZones,
   getPopulations,
+  getAllPopulations,
 } from "../controllers/personController";
 
 const personRouter: Router = Router();
@@ -31,6 +32,8 @@ personRouter.get("/getalertlevel", getAlertLevel);
 personRouter.get("/getallzones", getAllZones);
 
 personRouter.get("/getpopulations", getPopulations);
+
+personRouter.get("/getallpopulations", getAllPopulations)
 
 personRouter.post("/", createPerson);
 

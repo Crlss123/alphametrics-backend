@@ -66,10 +66,13 @@ export const getTotalPeople: RequestHandler = async (
   res: Response
 ) => {
   try {
-    const totalPersonas = await Person.count();
+    const { populationId } = req.query;
+    const totalPersonas = await Person.count({
+      where: { population_id: Number(populationId) },
+    });
     res.status(200).json({
       message: "Total de personas obtenido exitosamente",
-      payload: { total: totalPersonas },
+      payload: totalPersonas,
       status: "success",
     });
   } catch (error) {
@@ -86,15 +89,17 @@ export const getStatusPercentage: RequestHandler = async (
   res: Response
 ) => {
   try {
-    const total = await Person.count();
-    const graduates = await Person.count({ where: { status: true } });
+    const { populationId } = req.query;
+    const total = await Person.count({
+      where: { population_id: Number(populationId) },
+    });
+    const graduates = await Person.count({
+      where: { status: true, population_id: Number(populationId) },
+    });
     const failed = total - graduates;
     res.status(200).json({
       message: "Informacion obtenida correctamente",
-      payload: [
-        { name: "Graduados", value: graduates },
-        { name: "No Graduado", value: failed },
-      ],
+      payload: [{ name: "-", graduados: graduates, noGraduados: failed }],
       status: "success",
     });
   } catch (error) {
@@ -111,23 +116,26 @@ export const getGenderStats: RequestHandler = async (
   res: Response
 ) => {
   try {
+    const { populationId } = req.query;
     const maleGraduates = await Person.count({
       where: {
         gender: "M",
         status: true,
+        population_id: Number(populationId),
       },
     });
     const femaleGraduates = await Person.count({
       where: {
         gender: "F",
         status: true,
+        population_id: Number(populationId),
       },
     });
 
-    const response = {
-      hombresGraduados: maleGraduates,
-      mujeresGraduadas: femaleGraduates,
-    };
+    const response = [
+      { name: "Mujeres", value: femaleGraduates },
+      { name: "Hombres", value: maleGraduates },
+    ];
 
     res.status(200).json({
       message: "Datos obtenidos exitosamente",
@@ -180,9 +188,14 @@ export const getAlertLevel: RequestHandler = async (
   res: Response
 ) => {
   try {
-    const total = await Person.count();
-    const graduates = await Person.count({ where: { status: true } });
-    const gradPercentage = (graduates * 100) / total;
+    const { populationId } = req.query;
+    const totalPersonas = await Person.count({
+      where: { population_id: Number(populationId) },
+    });
+    const graduates = await Person.count({
+      where: { status: true, population_id: Number(populationId) },
+    });
+    const gradPercentage = (graduates * 100) / totalPersonas;
     let level = "";
 
     if (gradPercentage <= 20) {
@@ -257,6 +270,32 @@ export const getPopulations: RequestHandler = async (
       message: "Poblaciones obtenidas correctamente",
       payload: populations,
       status: "success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener los datos",
+      payload: null,
+      status: "error",
+    });
+  }
+};
+
+export const getAllPopulations: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const populations = await Population.findAll({
+      include: [
+        {
+          model: Zone,
+        },
+      ],
+    });
+    res.status(200).json({
+      message: "Poblaciones obtenidas correctamente",
+      payload: populations,
+      status: "succes",
     });
   } catch (error) {
     res.status(500).json({

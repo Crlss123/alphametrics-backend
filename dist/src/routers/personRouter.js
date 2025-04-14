@@ -11,6 +11,7 @@ personRouter.get("/getpeoplebygroup", personController_1.getPeopleByGroup);
 personRouter.get("/getalertlevel", personController_1.getAlertLevel);
 personRouter.get("/getallzones", personController_1.getAllZones);
 personRouter.get("/getpopulations", personController_1.getPopulations);
+personRouter.get("/getallpopulations", personController_1.getAllPopulations);
 personRouter.post("/", personController_1.createPerson);
 personRouter.patch("/:id", personController_1.modifyPerson);
 personRouter.delete("/:id", personController_1.deletePerson);

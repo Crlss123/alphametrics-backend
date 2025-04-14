@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getPopulations = exports.getAllZones = exports.getAlertLevel = exports.getPeopleByGroup = exports.getGenderStats = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
+exports.deletePerson = exports.getPersonById = exports.modifyPerson = exports.getAllPopulations = exports.getPopulations = exports.getAllZones = exports.getAlertLevel = exports.getPeopleByGroup = exports.getGenderStats = exports.getStatusPercentage = exports.getTotalPeople = exports.getAllPeople = exports.createPerson = void 0;
 const person_1 = require("../models/person");
 const population_1 = require("../models/population");
 const zone_1 = require("../models/zone");
@@ -62,10 +62,13 @@ const getAllPeople = (req, res) => {
 exports.getAllPeople = getAllPeople;
 const getTotalPeople = async (req, res) => {
     try {
-        const totalPersonas = await person_1.Person.count();
+        const { populationId } = req.query;
+        const totalPersonas = await person_1.Person.count({
+            where: { population_id: Number(populationId) },
+        });
         res.status(200).json({
             message: "Total de personas obtenido exitosamente",
-            payload: { total: totalPersonas },
+            payload: totalPersonas,
             status: "success",
         });
     }
@@ -80,15 +83,17 @@ const getTotalPeople = async (req, res) => {
 exports.getTotalPeople = getTotalPeople;
 const getStatusPercentage = async (req, res) => {
     try {
-        const total = await person_1.Person.count();
-        const graduates = await person_1.Person.count({ where: { status: true } });
+        const { populationId } = req.query;
+        const total = await person_1.Person.count({
+            where: { population_id: Number(populationId) },
+        });
+        const graduates = await person_1.Person.count({
+            where: { status: true, population_id: Number(populationId) },
+        });
         const failed = total - graduates;
         res.status(200).json({
             message: "Informacion obtenida correctamente",
-            payload: [
-                { name: "Graduados", value: graduates },
-                { name: "No Graduado", value: failed },
-            ],
+            payload: [{ name: "-", graduados: graduates, noGraduados: failed }],
             status: "success",
         });
     }
@@ -103,22 +108,25 @@ const getStatusPercentage = async (req, res) => {
 exports.getStatusPercentage = getStatusPercentage;
 const getGenderStats = async (req, res) => {
     try {
+        const { populationId } = req.query;
         const maleGraduates = await person_1.Person.count({
             where: {
                 gender: "M",
                 status: true,
+                population_id: Number(populationId),
             },
         });
         const femaleGraduates = await person_1.Person.count({
             where: {
                 gender: "F",
                 status: true,
+                population_id: Number(populationId),
             },
         });
-        const response = {
-            hombresGraduados: maleGraduates,
-            mujeresGraduadas: femaleGraduates,
-        };
+        const response = [
+            { name: "Mujeres", value: femaleGraduates },
+            { name: "Hombres", value: maleGraduates },
+        ];
         res.status(200).json({
             message: "Datos obtenidos exitosamente",
             payload: response,
@@ -164,9 +172,14 @@ const getPeopleByGroup = async (req, res) => {
 exports.getPeopleByGroup = getPeopleByGroup;
 const getAlertLevel = async (req, res) => {
     try {
-        const total = await person_1.Person.count();
-        const graduates = await person_1.Person.count({ where: { status: true } });
-        const gradPercentage = (graduates * 100) / total;
+        const { populationId } = req.query;
+        const totalPersonas = await person_1.Person.count({
+            where: { population_id: Number(populationId) },
+        });
+        const graduates = await person_1.Person.count({
+            where: { status: true, population_id: Number(populationId) },
+        });
+        const gradPercentage = (graduates * 100) / totalPersonas;
         let level = "";
         if (gradPercentage <= 20) {
             level = "Grave";
@@ -247,6 +260,30 @@ const getPopulations = async (req, res) => {
     }
 };
 exports.getPopulations = getPopulations;
+const getAllPopulations = async (req, res) => {
+    try {
+        const populations = await population_1.Population.findAll({
+            include: [
+                {
+                    model: zone_1.Zone,
+                },
+            ],
+        });
+        res.status(200).json({
+            message: "Poblaciones obtenidas correctamente",
+            payload: populations,
+            status: "succes",
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            message: "Error al obtener los datos",
+            payload: null,
+            status: "error",
+        });
+    }
+};
+exports.getAllPopulations = getAllPopulations;
 const modifyPerson = (req, res) => {
     if (!req.body) {
         res.status(400).json({
