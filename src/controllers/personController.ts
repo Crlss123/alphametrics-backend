@@ -197,20 +197,25 @@ export const getAlertLevel: RequestHandler = async (
     });
     const gradPercentage = (graduates * 100) / totalPersonas;
     let level = "";
+    let color = "";
 
     if (gradPercentage <= 20) {
       level = "Grave";
+      color = "#9C0303";
     } else if (gradPercentage <= 50) {
       level = "Alto";
+      color = "#D62828";
     } else if (gradPercentage <= 90) {
-      level = "Bajo";
+      level = "Medio";
+      color = "#EECF6D";
     } else {
-      level = "Nulo";
+      level = "Bajo";
+      color = "#49D49D";
     }
 
     res.status(200).json({
       message: "Datos obtenidos correctamente",
-      payload: level,
+      payload: { level: level, color: color },
       status: "success",
     });
   } catch (error) {
